@@ -25,8 +25,8 @@ const StockSellModal = ({ stock, closeModal }) => {
       }
 
       // Send the sell request to the backend with the stock symbol and units
-      await axios.post('http://localhost:5000/api/sell', {
-        symbol: stock.symbol,
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/sell`, {
+        symbol: stock.symbol,   
         units: unitsToSell
       });
 

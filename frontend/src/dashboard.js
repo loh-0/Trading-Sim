@@ -283,7 +283,7 @@ function Dashboard() {
 
   const fetchPortfolio = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/portfolio');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/portfolio`);
       setPortfolio(response.data.portfolio);
     } catch (error) {
       message.error('Error fetching portfolio');
