@@ -27,8 +27,7 @@ function Navbar() {
       <ul style={styles.navList}>
         {[
           { path: '/', label: 'Dashboard', icon: '📊' },
-          { path: '/buy', label: 'Trade', icon: '💰' },
-          { path: '/portfolio', label: 'Portfolio', icon: '📈' }
+          { path: '/buy', label: 'Trade', icon: '💰' }
         ].map((item, index) => (
           <li key={item.path}>
             <Link 
@@ -48,15 +47,10 @@ function Navbar() {
         ))}
       </ul>
 
-      {/* User Section */}
-      <div style={styles.userSection}>
-        <div style={styles.userAvatar}>
-          <span style={styles.avatarText}>JD</span>
-        </div>
-        <div style={styles.balanceChip}>
-          <span style={styles.balanceLabel}>Balance</span>
-          <span style={styles.balanceAmount}>$25,420</span>
-        </div>
+      {/* Balance Section */}
+      <div style={styles.balanceChip}>
+        <span style={styles.balanceLabel}>Balance</span>
+        <span style={styles.balanceAmount}>$25,420</span>
       </div>
     </nav>
   );
@@ -144,27 +138,6 @@ const styles = {
     fontSize: '16px',
     filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
   },
-  userSection: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-  },
-  userAvatar: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
-    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
-    border: '2px solid rgba(255, 255, 255, 0.1)',
-  },
-  avatarText: {
-    fontSize: '14px',
-    fontWeight: '700',
-    color: 'white',
-  },
   balanceChip: {
     display: 'flex',
     flexDirection: 'column',
@@ -189,20 +162,5 @@ const styles = {
     lineHeight: '1.2',
   },
 };
-
-// Add this CSS to your index.css for the pulse animation
-const pulseKeyframes = `
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-`;
-
-// You can add this to your index.css file
-// Or inject it programmatically if needed
 
 export default Navbar;
