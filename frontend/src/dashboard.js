@@ -298,6 +298,7 @@ function Dashboard() {
 
   //##
 
+  
   const fetchPortfolio = async () => {
   try {
     // Get the API URL with fallback
@@ -346,7 +347,7 @@ function Dashboard() {
     message.error(`Error fetching portfolio: ${error.message}`);
     setPortfolio([]); // Always set empty array to prevent undefined errors
   }
-
+};
 
 
 
