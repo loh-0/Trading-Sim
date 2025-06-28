@@ -1,32 +1,44 @@
-// ===== FILE 1: server.js  
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const axios = require('axios');
 
-// Initialize Express app and middlewares
 const app = express();
 
-// CORS configuration for production
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-vercel-app.vercel.app'] // Replace with your actual Vercel URL
-    : ['http://localhost:3000'],
+// === ✅ CORS SETUP ===
+const allowedOrigins = [
+  'https://trading-sim-rho.vercel.app', // your actual Vercel frontend
+  'http://localhost:3000'               // for local dev testing
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow no origin (e.g., Postman) or whitelisted origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
-};
+}));
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
-// MongoDB connection using environment variable
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:admin@cluster0.sygon.mongodb.net/?retryWrites=true&w=majority';
+// === ✅ ENVIRONMENT VARIABLES ===
+const MONGO_URI = process.env.MONGO_URI;
+const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY;
 
-mongoose.connect(MONGO_URI)
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
+// === ✅ DATABASE CONNECTION ===
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('✅ MongoDB connected'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Define Stock schema
+// === ✅ STOCK SCHEMA ===
 const stockSchema = new mongoose.Schema({
   symbol: { type: String, required: true },
   shares: { type: Number, required: true },
@@ -35,34 +47,28 @@ const stockSchema = new mongoose.Schema({
 
 const Stock = mongoose.model('Stock', stockSchema);
 
-// Finnhub API key from environment variable
-const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY || 'creopp1r01qnd5d01ie0creopp1r01qnd5d01ieg';
-
-// Helper function to fetch live stock price
+// === ✅ HELPER FUNCTION: FETCH CURRENT STOCK PRICE ===
 const getCurrentStockPrice = async (symbol) => {
   try {
     const response = await axios.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
     return response.data.c;
   } catch (err) {
-    console.error('Error fetching stock price:', err);
+    console.error('❌ Error fetching stock price:', err);
     throw new Error('Could not fetch stock price');
   }
 };
 
-// Root route for health check
+// === ✅ ROUTES ===
 app.get('/', (req, res) => {
   res.json({ message: 'Trade Simulator API is running!' });
 });
 
-// GET /api/portfolio - Fetch portfolio
 app.get('/api/portfolio', async (req, res) => {
   try {
     const portfolio = await Stock.find();
-
     const updatedPortfolio = await Promise.all(portfolio.map(async (stock) => {
       const currentPrice = await getCurrentStockPrice(stock.symbol);
       const profit = (currentPrice - stock.buyPrice) * stock.shares;
-
       return {
         symbol: stock.symbol,
         shares: stock.shares,
@@ -74,12 +80,11 @@ app.get('/api/portfolio', async (req, res) => {
 
     res.json({ portfolio: updatedPortfolio });
   } catch (err) {
-    console.error('Portfolio fetch error:', err);
+    console.error('❌ Portfolio fetch error:', err);
     res.status(500).json({ error: 'Failed to fetch portfolio' });
   }
 });
 
-// POST /api/buy - Buy stock
 app.post('/api/buy', async (req, res) => {
   const { symbol, units } = req.body;
 
@@ -94,21 +99,16 @@ app.post('/api/buy', async (req, res) => {
     }
 
     const price = await getCurrentStockPrice(symbol);
-    stock = new Stock({
-      symbol,
-      shares: units,
-      buyPrice: price,
-    });
-
+    stock = new Stock({ symbol, shares: units, buyPrice: price });
     await stock.save();
+
     res.json({ message: 'Stock bought successfully', stock });
   } catch (err) {
-    console.error('Stock purchase error:', err);
+    console.error('❌ Stock purchase error:', err);
     res.status(500).json({ error: 'Failed to buy stock' });
   }
 });
 
-// POST /api/sell - Sell stock
 app.post('/api/sell', async (req, res) => {
   const { symbol, units } = req.body;
 
@@ -133,13 +133,13 @@ app.post('/api/sell', async (req, res) => {
 
     res.json({ message: 'Stock sold successfully' });
   } catch (err) {
-    console.error('Stock sell error:', err);
+    console.error('❌ Stock sell error:', err);
     res.status(500).json({ error: 'Failed to sell stock' });
   }
 });
 
-// Start server
+// === ✅ START SERVER ===
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
