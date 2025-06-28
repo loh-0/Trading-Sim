@@ -282,76 +282,26 @@ function Dashboard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hideBalances, setHideBalances] = useState(false);
 
-  // const fetchPortfolio = async () => {
-  //   try {
-  //     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/portfolio`);
-  //     setPortfolio(response.data.portfolio);
-  //   } catch (error) {
-  //     message.error('Error fetching portfolio');
-  //   }
-
-
-  //   //##
-
-  //   //##
-
-  // };
-
-  //##
-
-  console.log("API:", process.env.REACT_APP_API_URL);
-
   const fetchPortfolio = async () => {
-  try {
-    // Get the API URL with fallback
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://trading-sim-9070.onrender.com';
-    
-    console.log('Environment check:', {
-      nodeEnv: process.env.NODE_ENV,
-      apiUrl: process.env.REACT_APP_API_URL,
-      fallbackUsed: !process.env.REACT_APP_API_URL,
-      finalUrl: apiUrl
-    });
-    
-    const fullUrl = `${apiUrl}/api/portfolio`;
-    console.log('Making request to:', fullUrl);
-    
-    const response = await axios.get(fullUrl, {
-      timeout: 10000, // 10 second timeout
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    console.log('Response status:', response.status);
-    console.log('Response data:', response.data);
-    
-    // Ensure we always set an array
-    const portfolioData = response.data?.portfolio || [];
-    console.log('Setting portfolio data:', portfolioData);
-    
-    setPortfolio(portfolioData);
-    
-  } catch (error) {
-    console.error('=== FETCH PORTFOLIO ERROR ===');
-    console.error('Error type:', error.name);
-    console.error('Error message:', error.message);
-    console.error('Error code:', error.code);
-    
-    if (error.response) {
-      console.error('Response status:', error.response.status);
-      console.error('Response data:', error.response.data);
-      console.error('Response headers:', error.response.headers);
-    } else if (error.request) {
-      console.error('No response received:', error.request);
+    try {
+      console.log("API:", process.env.REACT_APP_API_URL);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/portfolio`);
+      setPortfolio(response.data.portfolio);
+    } catch (error) {
+      message.error('Error fetching portfolio');
     }
-    
-    message.error(`Error fetching portfolio: ${error.message}`);
-    setPortfolio([]); // Always set empty array to prevent undefined errors
-  }
-};
 
 
+    //##
+
+    //##
+
+  };
+
+  ##
+
+
+ 
 
   //##
 
