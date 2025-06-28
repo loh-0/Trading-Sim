@@ -299,7 +299,8 @@ function Dashboard() {
 
   //##
 
-  
+  console.log("API:", process.env.REACT_APP_API_URL);
+
   const fetchPortfolio = async () => {
   try {
     // Get the API URL with fallback
