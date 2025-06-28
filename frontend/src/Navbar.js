@@ -46,12 +46,6 @@ function Navbar() {
           </li>
         ))}
       </ul>
-
-      {/* Balance Section */}
-      <div style={styles.balanceChip}>
-        <span style={styles.balanceLabel}>Balance</span>
-        <span style={styles.balanceAmount}>$25,420</span>
-      </div>
     </nav>
   );
 }

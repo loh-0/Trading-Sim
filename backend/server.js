@@ -138,6 +138,39 @@ app.post('/api/sell', async (req, res) => {
   }
 });
 
+
+// In your backend - modify your portfolio endpoint
+app.get('/api/portfolio', async (req, res) => {
+  try {
+    // Get portfolio data (your existing logic)
+    const portfolio = await getPortfolioData(); // Your existing function
+    
+    // Get user balance (add this)
+    const balance = await getUserBalance(); // You'll need to implement this
+    
+    // Return both portfolio and balance
+    res.json({
+      portfolio: portfolio,
+      balance: balance
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch portfolio and balance' });
+  }
+});
+
+// Example getUserBalance function
+async function getUserBalance() {
+  // This depends on how you store user data
+  // Could be from database, file, etc.
+  
+  // Example with a simple in-memory store:
+  return userBalance || 10000; // Default $10,000 starting balance
+  
+  // Or from a database:
+  // const user = await User.findById(userId);
+  // return user.balance;
+}
+
 // === ✅ START SERVER ===
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
