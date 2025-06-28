@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
+
+
 const StockBuy = () => {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -93,7 +95,8 @@ const StockBuy = () => {
     setBuyLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/buy', {
+      console.log("API:", process.env.REACT_APP_API_URL);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/buy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
