@@ -274,6 +274,7 @@ const CompanyLogo = ({ symbol, size = 48 }) => {
     </div>
   );
 };
+console.log("API:", process.env.REACT_APP_API_URL);
 
 function Dashboard() {
   const [portfolio, setPortfolio] = useState([]);
